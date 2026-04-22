@@ -39,8 +39,42 @@
         <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a>
       {% endfor %}
     </div>
-    <a href="#order" class="nav-cta">Order Now</a>
+
+    <div class="nav-actions">
+      <a href="#order" class="nav-cta">Order Now</a>
+      <button class="mobile-menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
   </nav>
+
+  <!-- MOBILE MENU DRAWER -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="nav-logo">
+        <div class="nav-logo-dot">TZ</div>
+        {{ shop.name | upcase }}
+      </div>
+      <button class="drawer-close" id="drawerClose">&times;</button>
+    </div>
+    <div class="drawer-links">
+      {% for link in linklists.main-menu.links %}
+        <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>
+          {{ link.title }}
+          <span class="arrow">→</span>
+        </a>
+      {% endfor %}
+    </div>
+    <div class="drawer-footer">
+      <a href="#order" class="btn-primary drawer-cta">Order Now</a>
+      <div class="drawer-social">
+        Hyderabad's Most Trusted Local Store
+      </div>
+    </div>
+  </div>
+  <div class="drawer-overlay" id="drawerOverlay"></div>
 
   <main role="main">
     {{ content_for_layout }}

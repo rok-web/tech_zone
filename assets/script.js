@@ -195,4 +195,31 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.fade-up').forEach(function(el) {
     observer.observe(el);
   });
+
+  // ── MOBILE MENU LOGIC ──
+  var menuToggle = document.getElementById('menuToggle');
+  var drawerClose = document.getElementById('drawerClose');
+  var drawerOverlay = document.getElementById('drawerOverlay');
+  var mobileDrawer = document.getElementById('mobileDrawer');
+
+  function openDrawer() {
+    mobileDrawer.classList.add('active');
+    drawerOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    mobileDrawer.classList.remove('active');
+    drawerOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (menuToggle) menuToggle.addEventListener('click', openDrawer);
+  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+  // Close drawer on link click
+  document.querySelectorAll('.drawer-links a').forEach(function(link) {
+    link.addEventListener('click', closeDrawer);
+  });
 });
