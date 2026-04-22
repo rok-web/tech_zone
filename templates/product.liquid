@@ -1,0 +1,433 @@
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="{{ shop.url }}">Home</a><span class="sep">›</span>
+  <a href="{{ collection.url | default: '/collections/all' }}">{{ collection.title | default: 'Audio' }}</a><span class="sep">›</span>
+  <span class="current">{{ product.title }}</span>
+</div>
+
+<!-- HERO -->
+<div class="hero" id="order">
+
+  <!-- LEFT — PRODUCT VISUAL -->
+  <div class="product-visual">
+    <div class="main-image-box">
+      <div class="img-bg-glow"></div>
+      <div class="img-bg-grid"></div>
+      <div class="img-badge-qc">QC Tested</div>
+      <div class="img-badge-delivery">Same Day</div>
+
+      {% if product.featured_image %}
+        <img
+          id="mainProductImage"
+          src="{{ product.featured_image | img_url: '500x500', crop: 'center' }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          class="product-main-img"
+        >
+      {% else %}
+        <div class="product-placeholder">{{ product.title | slice: 0 }}</div>
+      {% endif %}
+    </div>
+
+    {% if product.images.size > 1 %}
+    <div class="thumb-row">
+      {% for image in product.images limit: 4 %}
+        <div class="thumb {% if forloop.first %}active{% endif %}"
+             data-src="{{ image | img_url: '500x500', crop: 'center' }}"
+             onclick="changeImage(this)">
+          <img src="{{ image | img_url: '100x100', crop: 'center' }}" alt="{{ image.alt | escape }}">
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- RIGHT — PRODUCT INFO -->
+  <div class="product-info">
+    <div class="p-tag-row">
+      <span class="p-tag hot">Bestseller</span>
+      <span class="p-tag new">Premium Sound</span>
+      <span class="p-tag loc">Hyderabad</span>
+    </div>
+
+    <h1 class="p-title">{{ product.title }}</h1>
+    <p class="p-subtitle">{{ product.description | strip_html | truncate: 160 }}</p>
+
+    <div class="rating-row">
+      <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <span class="rating-num">4.9</span>
+      <span class="rating-count">(214 reviews)</span>
+      <span class="rating-sep">&middot;</span>
+      <span class="verified-badge">Verified Buyers</span>
+    </div>
+
+    <!-- PRICE -->
+    <div class="price-section">
+      <div class="price-row">
+        <div class="price-main" id="productPrice">
+          {{ current_variant.price | money }}
+        </div>
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <div class="price-old">{{ current_variant.compare_at_price | money }}</div>
+          <div class="price-save">
+            Save {{ current_variant.compare_at_price | minus: current_variant.price | money }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="price-note">Pay just <strong>Rs.99 now</strong> to confirm · Remaining <strong>cash on delivery</strong></div>
+    </div>
+
+    <!-- SHOPIFY ADD TO CART FORM -->
+    {% form 'product', product, id: 'product-form', class: 'product-form' %}
+      <input type="hidden" name="id" id="variantId" value="{{ current_variant.id }}">
+
+      {% if product.variants.size > 1 %}
+        <!-- VARIANTS (Color / Size Options) -->
+        {% for option in product.options_with_values %}
+          <div class="option-section">
+            <div class="option-label">
+              {{ option.name }}: <span id="optionName{{ forloop.index }}">{{ option.selected_value }}</span>
+            </div>
+
+            {% if option.name == 'Color' or option.name == 'Colour' %}
+              <div class="color-row" id="colorRow">
+                {% for value in option.values %}
+                  {% assign color_class = value | downcase | replace: ' ', '-' %}
+                  <div class="color-opt color-swatch {{ color_class }}-col {% if option.selected_value == value %}selected{% endif %}"
+                       data-value="{{ value }}"
+                       data-option-index="{{ forloop.parentloop.index0 }}"
+                       onclick="selectOption(this, '{{ option.name }}', '{{ value }}')"
+                       title="{{ value }}">
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="size-row">
+                {% for value in option.values %}
+                  <button type="button"
+                          class="size-opt {% if option.selected_value == value %}selected{% endif %}"
+                          onclick="selectOption(this, '{{ option.name }}', '{{ value }}')">
+                    {{ value }}
+                  </button>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- STOCK -->
+      <div class="stock-row">
+        {% if current_variant.available %}
+          <div class="stock-dot"></div>
+          <span class="stock-text">
+            {% if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity < 10 %}
+              Only {{ current_variant.inventory_quantity }} left in stock
+            {% else %}
+              In Stock
+            {% endif %}
+          </span>
+        {% else %}
+          <div class="stock-dot out"></div>
+          <span class="stock-text out">Out of Stock</span>
+        {% endif %}
+      </div>
+
+      <!-- CTA BUTTONS -->
+      <div class="cta-section">
+        <button
+          type="submit"
+          name="add"
+          id="addToCart"
+          class="btn-primary"
+          {% unless current_variant.available %}disabled{% endunless %}
+        >
+          {% if current_variant.available %}
+            Confirm Order — Pay Rs.99 Now
+          {% else %}
+            Out of Stock
+          {% endif %}
+        </button>
+      </div>
+
+    {% endform %}
+
+    <button class="btn-secondary" onclick="handleWhatsapp()">
+      Order via WhatsApp Instead
+    </button>
+
+    <!-- GUARANTEE BOX -->
+    <div class="guarantee-box">
+      <div class="guarantee-title">100% Safe Purchase — Here's How It Works</div>
+      <div class="g-steps">
+        <div class="g-step"><div class="g-num">1</div><div><strong>Pay Rs.99</strong> to confirm your order slot — fully refundable</div></div>
+        <div class="g-step"><div class="g-num">2</div><div>Our team <strong>calls you within 30 minutes</strong> to confirm delivery</div></div>
+        <div class="g-step"><div class="g-num">3</div><div>Product arrives same day — <strong>open the box in front of our delivery person</strong></div></div>
+        <div class="g-step"><div class="g-num">4</div><div>Happy with it? Pay <strong>remaining cash</strong> — simple!</div></div>
+        <div class="g-step"><div class="g-num">5</div><div>Not happy? <strong>Send it back — full Rs.99 refunded</strong>, no questions asked</div></div>
+      </div>
+    </div>
+
+    <!-- TRUST BADGES -->
+    <div class="trust-badges">
+      <div class="t-badge"><span class="icon-label">Box</span>Open Box<br>Delivery</div>
+      <div class="t-badge"><span class="icon-label">Fast</span>Same Day<br>Hyderabad</div>
+      <div class="t-badge"><span class="icon-label">Return</span>Easy<br>Returns</div>
+      <div class="t-badge"><span class="icon-label">QC</span>Quality<br>Tested</div>
+    </div>
+
+    <!-- WHATSAPP ROW -->
+    <div class="whatsapp-row">
+      <div class="wa-text">
+        <div>Have a question? Chat with us</div>
+        <div>Available 9 AM – 8 PM · Hyderabad</div>
+      </div>
+      <button class="wa-btn" onclick="handleWhatsapp()">WhatsApp Us</button>
+    </div>
+
+  </div><!-- /.product-info -->
+</div><!-- /.hero -->
+
+<hr class="divider">
+
+<!-- FEATURES SECTION -->
+<div class="section fade-up">
+  <div class="section-title">Why You'll <span>Love It</span></div>
+  <p class="section-sub">Engineered for the everyday listener who refuses to compromise on quality.</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-title">Deep Bass Sound</div>
+      <div class="feat-desc">Custom 13mm dynamic drivers deliver rich, punchy bass and crystal-clear highs. Cinema quality in your ears.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-title">30-Hour Battery</div>
+      <div class="feat-desc">Up to 8 hours in earbuds + 22 hours in case. Never run out of music during your workday or commute.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-title">Noise Isolation</div>
+      <div class="feat-desc">Passive noise isolation ear tips block out traffic, office chatter, and background noise perfectly.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-title">Crystal Clear Calls</div>
+      <div class="feat-desc">Built-in microphone with noise reduction ensures your voice comes through clear on every call.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-title">Fast Charging</div>
+      <div class="feat-desc">15 minutes of charging gives you 3 hours of playback. USB-C charging cable included in box.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-title">Universal Pairing</div>
+      <div class="feat-desc">Works instantly with iPhone, Android, laptops, and smart TVs. Bluetooth 5.3 for stable connection.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SPECS SECTION -->
+<div class="specs-section">
+  <div class="specs-inner fade-up">
+    <div class="specs-visual">
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" alt="{{ product.title | escape }}" style="max-width:300px;border-radius:16px;">
+      {% endif %}
+    </div>
+    <div>
+      <div class="section-title" style="margin-bottom:24px;">Full <span>Specs</span></div>
+      <div class="spec-list">
+        <div class="spec-row"><span class="spec-key">Driver Size</span><span class="spec-val">13mm Dynamic</span></div>
+        <div class="spec-row"><span class="spec-key">Bluetooth</span><span class="spec-val">5.3 (Stable)</span></div>
+        <div class="spec-row"><span class="spec-key">Battery — Earbuds</span><span class="spec-val">Up to 8 Hours</span></div>
+        <div class="spec-row"><span class="spec-key">Battery — Case</span><span class="spec-val">Up to 22 Hours</span></div>
+        <div class="spec-row"><span class="spec-key">Charging</span><span class="spec-val">USB-C Fast Charge</span></div>
+        <div class="spec-row"><span class="spec-key">Range</span><span class="spec-val">10 Meters</span></div>
+        <div class="spec-row"><span class="spec-key">Microphone</span><span class="spec-val">Built-in with Noise Reduction</span></div>
+        <div class="spec-row"><span class="spec-key">Water Resistance</span><span class="spec-val">IPX4 Sweat Proof</span></div>
+        <div class="spec-row"><span class="spec-key">Colors Available</span><span class="spec-val">White, Black, Blue</span></div>
+        <div class="spec-row"><span class="spec-key">Compatibility</span><span class="spec-val">iOS + Android + PC</span></div>
+        <div class="spec-row"><span class="spec-key">Warranty</span><span class="spec-val">3 Months Seller Warranty</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT'S IN THE BOX -->
+<div class="section fade-up">
+  <div class="section-title">What's in <span>The Box</span></div>
+  <p class="section-sub">Everything you need — right out of the box. Nothing extra to buy.</p>
+  <div class="box-contents">
+    <div class="box-item"><div class="box-name">Earbuds</div><div class="box-qty">x 1 Pair</div></div>
+    <div class="box-item"><div class="box-name">Charging Case</div><div class="box-qty">x 1</div></div>
+    <div class="box-item"><div class="box-name">USB-C Cable</div><div class="box-qty">x 1</div></div>
+    <div class="box-item"><div class="box-name">User Manual</div><div class="box-qty">x 1</div></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- REVIEWS -->
+<div class="section fade-up">
+  <div class="section-title">What Hyderabad <span>Says</span></div>
+  <p class="section-sub">Real customers. Real deliveries. Real reviews from across the city.</p>
+
+  <div class="ratings-summary">
+    <div class="big-rating">
+      <div class="big-rating-num">4.9</div>
+      <div class="big-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="big-rating-count">214 verified reviews</div>
+    </div>
+    <div class="rating-bars">
+      <div class="rbar-row"><span class="rbar-label">5 stars</span><div class="rbar-track"><div class="rbar-fill" style="width:88%"></div></div><span class="rbar-count">188</span></div>
+      <div class="rbar-row"><span class="rbar-label">4 stars</span><div class="rbar-track"><div class="rbar-fill" style="width:9%"></div></div><span class="rbar-count">19</span></div>
+      <div class="rbar-row"><span class="rbar-label">3 stars</span><div class="rbar-track"><div class="rbar-fill" style="width:2%"></div></div><span class="rbar-count">5</span></div>
+      <div class="rbar-row"><span class="rbar-label">2 stars</span><div class="rbar-track"><div class="rbar-fill" style="width:1%"></div></div><span class="rbar-count">2</span></div>
+      <div class="rbar-row"><span class="rbar-label">1 star</span><div class="rbar-track"><div class="rbar-fill" style="width:0%"></div></div><span class="rbar-count">0</span></div>
+    </div>
+  </div>
+
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer-avatar" style="background:linear-gradient(135deg,#ff6b00,#ff9500);color:#fff;">R</div>
+        <div><div class="reviewer-name">Ravi Kumar</div><div class="reviewer-loc">Ameerpet, Hyderabad</div></div>
+      </div>
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">Sound quality is excellent. Open box delivery — I checked it myself and paid only after I was satisfied. For this price, the quality is outstanding. Highly recommended.</div>
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-date">3 days ago</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer-avatar" style="background:linear-gradient(135deg,#1565c0,#42a5f5);color:#fff;">P</div>
+        <div><div class="reviewer-name">Priya Reddy</div><div class="reviewer-loc">Madhapur, Hyderabad</div></div>
+      </div>
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">Same day delivery is real. Ordered at 11 AM, received by 3 PM. The bass is genuinely good for the price. The team is very trustworthy and the refund policy is transparent.</div>
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-date">1 week ago</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer-avatar" style="background:linear-gradient(135deg,#2e7d32,#66bb6a);color:#fff;">S</div>
+        <div><div class="reviewer-name">Sai Teja</div><div class="reviewer-loc">LB Nagar, Hyderabad</div></div>
+      </div>
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">This is my second order from TechZone. Both times open box delivery — I checked everything in front of the delivery person. Sound quality is excellent. Worth every rupee.</div>
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-date">2 weeks ago</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer-avatar" style="background:linear-gradient(135deg,#6a1b9a,#ab47bc);color:#fff;">A</div>
+        <div><div class="reviewer-name">Ananya Singh</div><div class="reviewer-loc">Begumpet, Hyderabad</div></div>
+      </div>
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">They called me within 20 minutes of ordering. Delivery was very fast. The earbuds connect instantly and the sound is amazing. Microphone quality is also very clear for calls.</div>
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-date">3 weeks ago</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer-avatar" style="background:linear-gradient(135deg,#e53935,#ef9a9a);color:#fff;">M</div>
+        <div><div class="reviewer-name">Mohammed Farhan</div><div class="reviewer-loc">Dilsukhnagar, Hyderabad</div></div>
+      </div>
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">I was hesitant initially, but open box delivery removed all doubt. Product is exactly as shown, battery life is excellent. Will definitely order again.</div>
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-date">1 month ago</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="reviewer-avatar" style="background:linear-gradient(135deg,#00838f,#4dd0e1);color:#fff;">D</div>
+        <div><div class="reviewer-name">Deepika Rao</div><div class="reviewer-loc">Kondapur, Hyderabad</div></div>
+      </div>
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="review-text">Gifted this to my brother — he absolutely loves it. The sound isolation is great even without ANC. Charging case is solid. Outstanding value for money. TechZone is legit.</div>
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-date">1 month ago</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<div class="section fade-up">
+  <div class="section-title">Frequently Asked <span>Questions</span></div>
+  <p class="section-sub">Everything you want to know before ordering.</p>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Is this a genuine business or a fraud? <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-a">We are a real business based in Secunderabad, Hyderabad. We have delivered 500+ orders across the city. You can verify us on our Instagram page where you will find real customer delivery videos. Our godown is in Secunderabad and we deliver through verified delivery partners across all Hyderabad areas.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Why is there a Rs.99 advance payment? <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-a">The Rs.99 is only to confirm your order slot and book your delivery. It is not a payment for the product. It is 100% refundable — if you reject the product during open box delivery, we refund the Rs.99 immediately. If you accept, it is adjusted in your final payment.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What is open box delivery? <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-a">Open box delivery means our delivery person waits while you open and check the product completely. Test the earbuds, check the sound, check the charging — everything. Only if you are 100% satisfied, you pay the remaining amount in cash. If anything is wrong, send it back right then and there. Zero risk to you.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How fast is delivery in Hyderabad? <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-a">Orders placed before 2 PM are delivered the same day. Orders placed after 2 PM are delivered the next morning. We cover all areas of Hyderabad including Secunderabad, Ameerpet, LB Nagar, Dilsukhnagar, Madhapur, Kondapur, Begumpet, Uppal, and everywhere in between.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What if the product stops working after delivery? <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-a">We provide a 3-month seller warranty on all products. If anything stops working within 3 months of purchase, WhatsApp us with a video of the issue and we will either replace the product or resolve the issue. Our customer support is real and responsive.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Are these original Apple AirPods? <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-a">No, these are premium TWS earbuds inspired by the AirPods Pro design. They are not original Apple products. The sound quality, bass, and build are excellent for the price point. We are completely transparent about this — you are getting premium quality audio at a fraction of the Apple price.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can I order if I am outside Hyderabad? <span class="faq-arrow">+</span>
+      </div>
+      <div class="faq-a">Currently we only deliver within Hyderabad for same-day open box delivery. We are working on expanding to other Telangana cities soon. If you are outside Hyderabad, please WhatsApp us and we will see what we can arrange.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOUNDER NOTE -->
+<div class="founder-section fade-up">
+  <div class="founder-avatar">F</div>
+  <div class="founder-text">
+    <h3>A Personal Note From Our Founder</h3>
+    <p>Hi, I am the founder of TechZone, based right here in Secunderabad. I started this because I wanted to bring premium gadgets to Hyderabad at honest prices, with zero fraud risk. Every product we send is personally tested by our team before it leaves our godown. If you ever have any issue, WhatsApp me directly — I will personally make sure you are happy. That is my promise to you.</p>
+    <div class="founder-sig">— Founder, TechZone Hyderabad &nbsp;|&nbsp; Secunderabad &nbsp;|&nbsp; WhatsApp: +91 9XXXXXXXXX</div>
+  </div>
+</div>
+
+<!-- MOBILE STICKY CTA -->
+<div class="mobile-cta">
+  <div class="mobile-price">
+    <div class="mp-main">{{ current_variant.price | money }}</div>
+    {% if current_variant.compare_at_price > current_variant.price %}
+      <div class="mp-old">{{ current_variant.compare_at_price | money }}</div>
+    {% endif %}
+  </div>
+  <button class="mobile-btn" onclick="document.getElementById('addToCart').click()">
+    Pay Rs.99 — Confirm
+  </button>
+</div>
+
+<!-- Variant data for JS -->
+<script>
+  var productVariants = {{ product.variants | json }};
+  var currentVariantId = {{ current_variant.id }};
+  var selectedOptions = {{ current_variant.options | json }};
+</script>
