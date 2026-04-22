@@ -17,8 +17,15 @@
 <body>
 
   <!-- ANNOUNCEMENT BAR -->
-  <div class="announce">
-    Same Day Delivery in Hyderabad &nbsp;<span>|</span>&nbsp; Open Box Delivery &nbsp;<span>|</span>&nbsp; COD Available &nbsp;<span>|</span>&nbsp; Rs.99 Token — 100% Refundable &nbsp;<span>|</span>&nbsp; 500+ Orders Delivered
+  <div class="announce-bar">
+    <div class="announce-track">
+      <div class="announce-content">
+        Same Day Delivery in Hyderabad &nbsp;<span>|</span>&nbsp; Open Box Delivery &nbsp;<span>|</span>&nbsp; COD Available &nbsp;<span>|</span>&nbsp; Rs.99 Token — 100% Refundable &nbsp;<span>|</span>&nbsp; 500+ Orders Delivered
+      </div>
+      <div class="announce-content">
+        Same Day Delivery in Hyderabad &nbsp;<span>|</span>&nbsp; Open Box Delivery &nbsp;<span>|</span>&nbsp; COD Available &nbsp;<span>|</span>&nbsp; Rs.99 Token — 100% Refundable &nbsp;<span>|</span>&nbsp; 500+ Orders Delivered
+      </div>
+    </div>
   </div>
 
   <!-- NAVBAR -->
@@ -28,9 +35,8 @@
       {{ shop.name | upcase }}
     </a>
     <div class="nav-links">
-      <a href="{{ shop.url }}">Home</a>
       {% for link in linklists.main-menu.links %}
-        <a href="{{ link.url }}">{{ link.title }}</a>
+        <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a>
       {% endfor %}
     </div>
     <a href="#order" class="nav-cta">Order Now</a>
