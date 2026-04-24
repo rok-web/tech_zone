@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ page_description | default: shop.description | escape }}">
 
+  <title>
+    {{ page_title | default: shop.name }}
+    {%- unless page_title contains shop.name %} — {{ shop.name }}{% endunless %}
+  </title>
+
+  <!-- Canonical & OG -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title | default: shop.name }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ canonical_url }}">
+  {%- if product.featured_image -%}
+    <meta property="og:image" content="{{ product.featured_image | img_url: '1200x630' }}">
+  {%- endif -%}
+
+  <!-- Favicon -->
+  {%- if settings.favicon -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {%- endif -%}
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Theme Stylesheet -->
+  {{ 'style.css' | asset_url | stylesheet_tag }}
+
+  <!-- Shopify Required -->
+  {{ content_for_header }}
+</head>
+
+<body class="template-{{ template | replace: '.', '-' | replace: '/', '-' }}">
+
+  <main id="main-content" role="main">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- Theme JS -->
+  <script src="{{ 'script.js' | asset_url }}" defer></script>
+
+</body>
+</html>
