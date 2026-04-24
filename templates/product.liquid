@@ -1,0 +1,16 @@
+{% comment %}
+  Default product template (fallback).
+  Your landing page uses: templates/product.landing.liquid
+  Assign that template to your product in Shopify Admin.
+{% endcomment %}
+
+<div style="max-width:600px; margin:80px auto; padding:0 24px; text-align:center; font-family:sans-serif;">
+  <h1>{{ product.title }}</h1>
+  <p>{{ product.price | money }}</p>
+  <form method="post" action="/cart/add">
+    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+    <button type="submit" style="background:#00f0b5;color:#060810;padding:14px 32px;border:none;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;">
+      Add to Cart
+    </button>
+  </form>
+</div>
