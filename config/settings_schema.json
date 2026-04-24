@@ -1,1 +1,71 @@
-
+[
+  {
+    "name": "theme_info",
+    "theme_name": "AuraX Landing",
+    "theme_version": "1.0.0",
+    "theme_author": "Custom Theme",
+    "theme_documentation_url": "https://help.shopify.com/en/themes",
+    "theme_support_url": "https://help.shopify.com/en/themes"
+  },
+  {
+    "name": "General",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image"
+      }
+    ]
+  },
+  {
+    "name": "Announcement Bar",
+    "settings": [
+      {
+        "type": "text",
+        "id": "announcement_text",
+        "label": "Announcement text",
+        "default": "FREE SHIPPING on orders over ₹1,999 | 30-Day Returns | 1-Year Warranty"
+      },
+      {
+        "type": "color",
+        "id": "announcement_bg",
+        "label": "Background color",
+        "default": "#00f0b5"
+      }
+    ]
+  },
+  {
+    "name": "Hero Section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "hero_badge_text",
+        "label": "Badge text",
+        "default": "NEW RELEASE 2025"
+      },
+      {
+        "type": "textarea",
+        "id": "hero_subtitle",
+        "label": "Hero subtitle",
+        "default": "Experience sound that moves with your soul. Engineered for audiophiles. Built for the streets."
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent color",
+        "default": "#00f0b5"
+      },
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background color",
+        "default": "#060810"
+      }
+    ]
+  }
+]
