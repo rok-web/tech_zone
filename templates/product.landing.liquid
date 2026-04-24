@@ -1,1 +1,1346 @@
+{% comment %}
+  product.landing.liquid
+  Premium One-Product Landing Page — Earbuds
+  Drop this file in /templates/ and assign it to your product in Shopify Admin.
+{% endcomment %}
 
+<style>
+  /* ── Reset & Base ─────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep:     #080a0f;
+    --bg-card:     #0d1017;
+    --bg-raised:   #111620;
+    --border:      rgba(255,255,255,0.07);
+    --accent:      #00e5ff;
+    --accent2:     #7c3aed;
+    --gold:        #f5c842;
+    --text-primary:#f0f4ff;
+    --text-muted:  #7a8499;
+    --grad-btn:    linear-gradient(135deg, #00e5ff 0%, #7c3aed 100%);
+    --grad-hero:   radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,229,255,.12) 0%, transparent 70%);
+    --shadow-glow: 0 0 40px rgba(0,229,255,.18);
+    --radius:      14px;
+    --font-display:'Syne', sans-serif;
+    --font-body:   'DM Sans', sans-serif;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1,h2,h3,h4 { font-family: var(--font-display); line-height: 1.15; }
+
+  a { color: inherit; text-decoration: none; }
+
+  img { display: block; max-width: 100%; }
+
+  .container {
+    width: min(1140px, 94vw);
+    margin: 0 auto;
+  }
+
+  .section { padding: 96px 0; }
+
+  .section-label {
+    font-size: .72rem;
+    font-weight: 500;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 18px;
+  }
+
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 540px;
+  }
+
+  /* ── Announcement Bar ─────────────────────────── */
+  .ann-bar {
+    background: linear-gradient(90deg, var(--accent2) 0%, var(--accent) 100%);
+    text-align: center;
+    padding: 10px 16px;
+    font-size: .82rem;
+    font-weight: 500;
+    letter-spacing: .06em;
+  }
+
+  /* ── Sticky Nav ───────────────────────────────── */
+  .site-nav {
+    position: sticky; top: 0; z-index: 900;
+    background: rgba(8,10,15,.88);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    transition: box-shadow .3s;
+  }
+  .site-nav.scrolled { box-shadow: 0 2px 30px rgba(0,0,0,.6); }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -.01em;
+  }
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    font-size: .9rem;
+    color: var(--text-muted);
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--grad-btn);
+    color: #fff;
+    font-weight: 600;
+    font-size: .88rem;
+    padding: 10px 22px;
+    border-radius: 50px;
+    transition: opacity .2s, transform .2s;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { opacity: .88; transform: translateY(-1px); }
+
+  /* ── HERO ─────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding: 100px 0 80px;
+    background: var(--grad-hero);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle 600px at 70% 50%, rgba(124,58,237,.09), transparent),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,255,.08);
+    border: 1px solid rgba(0,229,255,.2);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: .78rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 22px;
+    font-weight: 600;
+  }
+
+  .hero-title {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -.02em;
+    margin-bottom: 20px;
+  }
+  .hero-title em {
+    font-style: normal;
+    background: var(--grad-btn);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-desc {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 460px;
+    margin-bottom: 32px;
+  }
+
+  .hero-price-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .price-current {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: var(--grad-btn);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .price-compare {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+
+  .price-save {
+    background: rgba(245,200,66,.12);
+    border: 1px solid rgba(245,200,66,.3);
+    color: var(--gold);
+    font-size: .78rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 50px;
+    letter-spacing: .06em;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--grad-btn);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 17px 42px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: transform .25s, box-shadow .25s, opacity .25s;
+    box-shadow: 0 8px 32px rgba(0,229,255,.22);
+    letter-spacing: .02em;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 48px rgba(0,229,255,.34);
+  }
+  .btn-primary:active { transform: translateY(0) scale(.98); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: .95rem;
+    font-weight: 500;
+    padding: 16px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    background: rgba(0,229,255,.05);
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .hero-trust {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .82rem;
+    color: var(--text-muted);
+  }
+  .trust-item svg { color: var(--accent); flex-shrink: 0; }
+
+  /* ── Product Image ────────────────────────────── */
+  .hero-image-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-image-glow {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(circle, rgba(0,229,255,.18) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: pulseGlow 4s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%,100% { opacity: .6; transform: scale(1); }
+    50%      { opacity: 1;  transform: scale(1.08); }
+  }
+
+  .hero-img {
+    position: relative;
+    z-index: 1;
+    border-radius: 24px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px var(--border);
+    animation: floatImg 6s ease-in-out infinite;
+    width: 100%;
+    max-width: 480px;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+  }
+
+  @keyframes floatImg {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-14px); }
+  }
+
+  .img-badge {
+    position: absolute;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: .8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    animation: floatImg 6s ease-in-out infinite;
+  }
+  .img-badge.left  { bottom: 10%; left: -10%; animation-delay: -2s; }
+  .img-badge.right { top: 12%; right: -6%; animation-delay: -4s; }
+
+  .badge-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34,197,94,.6);
+  }
+
+  /* ── Stats Bar ────────────────────────────────── */
+  .stats-bar {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 0;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    text-align: center;
+  }
+
+  .stat-item { padding: 0 20px; }
+  .stat-item + .stat-item { border-left: 1px solid var(--border); }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: var(--grad-btn);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+
+  .stat-label {
+    font-size: .82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── Features ─────────────────────────────────── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    transition: border-color .3s, transform .3s, box-shadow .3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--grad-btn);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .feature-card:hover {
+    border-color: rgba(0,229,255,.25);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 48px rgba(0,0,0,.4);
+  }
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, rgba(0,229,255,.12), rgba(124,58,237,.12));
+    border: 1px solid rgba(0,229,255,.18);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+  }
+
+  .feature-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .feature-desc { color: var(--text-muted); font-size: .9rem; line-height: 1.65; }
+
+  /* ── Product Deep-Dive ────────────────────────── */
+  .deep-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 72px;
+  }
+
+  .deep-img {
+    border-radius: 20px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.5), 0 0 0 1px var(--border);
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+
+  .check-list { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: .95rem;
+  }
+
+  .check-icon {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .check-icon svg { width: 12px; height: 12px; stroke: #fff; }
+
+  /* ── Specs ────────────────────────────────────── */
+  .specs-section { background: var(--bg-card); }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 52px;
+    border: 1px solid var(--border);
+  }
+
+  .spec-row {
+    background: var(--bg-raised);
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: background .2s;
+  }
+  .spec-row:hover { background: rgba(0,229,255,.04); }
+
+  .spec-key { color: var(--text-muted); font-size: .9rem; }
+  .spec-val { font-weight: 600; font-size: .95rem; text-align: right; }
+
+  /* ── Reviews ──────────────────────────────────── */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+
+  .review-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.35);
+  }
+
+  .stars { color: var(--gold); font-size: 1rem; letter-spacing: 2px; margin-bottom: 14px; }
+
+  .review-text {
+    font-size: .92rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .reviewer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .reviewer-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: .9rem;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .reviewer-name { font-weight: 600; font-size: .88rem; }
+  .reviewer-meta { font-size: .78rem; color: var(--text-muted); }
+
+  .verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: .72rem;
+    color: #22c55e;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* ── Trust Badges Row ─────────────────────────── */
+  .trust-section {
+    background: var(--bg-card);
+    padding: 60px 0;
+  }
+
+  .trust-badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    min-width: 200px;
+    transition: border-color .3s;
+  }
+  .trust-badge:hover { border-color: rgba(0,229,255,.25); }
+
+  .trust-badge-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .trust-badge-text strong { display: block; font-size: .9rem; font-weight: 600; }
+  .trust-badge-text span { font-size: .78rem; color: var(--text-muted); }
+
+  /* ── FAQ ──────────────────────────────────────── */
+  .faq-list { margin-top: 52px; display: flex; flex-direction: column; gap: 12px; max-width: 780px; }
+
+  .faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 22px 28px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: background .2s;
+  }
+  .faq-q:hover { background: rgba(255,255,255,.03); }
+
+  .faq-chevron {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .3s, background .3s;
+    font-size: .7rem;
+  }
+  .faq-item.open .faq-chevron {
+    transform: rotate(180deg);
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-color: transparent;
+  }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s ease, padding .4s ease;
+    padding: 0 28px;
+    color: var(--text-muted);
+    font-size: .93rem;
+    line-height: 1.7;
+  }
+  .faq-item.open .faq-a { max-height: 300px; padding: 0 28px 22px; }
+
+  /* ── CTA Banner ───────────────────────────────── */
+  .cta-banner {
+    position: relative;
+    padding: 100px 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 70% at 50% 50%, rgba(0,229,255,.1) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 30% 50%, rgba(124,58,237,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+
+  .cta-sub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 500px;
+    margin: 0 auto 36px;
+  }
+
+  .cta-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  /* ── Footer ───────────────────────────────────── */
+  .site-footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    padding: 48px 0 32px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    list-style: none;
+    font-size: .85rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .footer-links a:hover { color: var(--text-primary); }
+
+  .footer-copy {
+    font-size: .8rem;
+    color: var(--text-muted);
+  }
+
+  /* ── WhatsApp Floating ────────────────────────── */
+  .wa-btn {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    z-index: 999;
+    width: 58px; height: 58px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 24px rgba(37,211,102,.4);
+    transition: transform .25s, box-shadow .25s;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .wa-btn:hover {
+    transform: translateY(-4px) scale(1.06);
+    box-shadow: 0 12px 36px rgba(37,211,102,.5);
+  }
+  .wa-btn svg { width: 28px; height: 28px; fill: #fff; }
+
+  /* ── Scroll-reveal ────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Responsive ───────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero-grid, .deep-grid { grid-template-columns: 1fr; }
+    .hero-grid { text-align: center; }
+    .hero-desc, .hero-actions { margin-left: auto; margin-right: auto; justify-content: center; }
+    .hero-trust { justify-content: center; flex-wrap: wrap; }
+    .hero-price-row { justify-content: center; }
+    .hero-image-wrap { order: -1; }
+    .img-badge.left  { left: 0; }
+    .img-badge.right { right: 0; }
+    .features-grid, .reviews-grid { grid-template-columns: 1fr 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
+    .stat-item + .stat-item { border-left: none; }
+    .stat-item { background: var(--bg-deep); }
+    .specs-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .section { padding: 64px 0; }
+    .features-grid, .reviews-grid { grid-template-columns: 1fr; }
+    .trust-badge { min-width: 160px; }
+    .hero { padding: 64px 0 56px; }
+  }
+</style>
+
+{% comment %} ── Announcement Bar ──────────────────────── {% endcomment %}
+<div class="ann-bar">
+  🎉 Limited Time: Free Express Shipping on All Orders — Use Code <strong>AUDIO10</strong> for Extra 10% Off
+</div>
+
+{% comment %} ── Navigation ───────────────────────────── {% endcomment %}
+<nav class="site-nav" id="siteNav">
+  <div class="container nav-inner">
+    <div class="nav-logo">SONO<span>X</span></div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#specs">Specs</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#buy-now" class="nav-cta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Buy Now
+    </a>
+  </div>
+</nav>
+
+{% comment %} ── HERO ─────────────────────────────────── {% endcomment %}
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>★</span> #1 Rated Earbuds 2024
+      </div>
+      <h1 class="hero-title">
+        Sound That Moves<br><em>Your World</em>
+      </h1>
+      <p class="hero-desc">
+        {{ product.description | strip_html | truncatewords: 30 }}
+      </p>
+      <div class="hero-price-row">
+        <span class="price-current">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="price-compare">{{ product.compare_at_price | money }}</span>
+          <span class="price-save">
+            SAVE {{ product.compare_at_price | minus: product.price | money }}
+          </span>
+        {% endif %}
+      </div>
+
+      <form method="post" action="/cart/add" class="hero-actions" id="buy-now">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        <button type="submit" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Add to Cart
+        </button>
+        <a href="#reviews" class="btn-secondary">
+          ★ 4.9 (2,400+ Reviews)
+        </a>
+      </form>
+
+      <div class="hero-trust">
+        <div class="trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Free Shipping
+        </div>
+        <div class="trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          2-Year Warranty
+        </div>
+        <div class="trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          30-Day Returns
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image-wrap">
+      <div class="hero-image-glow"></div>
+      {% if product.featured_image %}
+        <img
+          src="{{ product.featured_image | img_url: '600x' }}"
+          alt="{{ product.title | escape }}"
+          class="hero-img"
+          loading="eager"
+        >
+      {% else %}
+        <div class="hero-img" style="background:var(--bg-raised);display:flex;align-items:center;justify-content:center;color:var(--text-muted);">No image</div>
+      {% endif %}
+      <div class="img-badge left">
+        <div class="badge-dot"></div>
+        ANC Active
+      </div>
+      <div class="img-badge right">
+        🔋 40h Battery
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} ── Stats Bar ────────────────────────────── {% endcomment %}
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-num">40H</div>
+        <div class="stat-label">Total Battery Life</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num">-40dB</div>
+        <div class="stat-label">Active Noise Cancel</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num">30m</div>
+        <div class="stat-label">Wireless Range</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num">2,400+</div>
+        <div class="stat-label">5-Star Reviews</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %} ── Features ─────────────────────────────── {% endcomment %}
+<section class="section" id="features">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">Why Choose Us</p>
+      <h2 class="section-title">{{ product.title }} Features</h2>
+      <p class="section-sub">Everything you need for an unmatched audio experience — engineered to perfection.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎵</div>
+        <h3 class="feature-title">Hi-Res Audio</h3>
+        <p class="feature-desc">Custom-tuned 12mm drivers deliver studio-grade sound with deep bass, clear mids, and crisp highs — every note, every detail.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔇</div>
+        <h3 class="feature-title">Pro Noise Cancelling</h3>
+        <p class="feature-desc">Dual-mic ANC technology blocks up to -40dB of ambient sound. Focus on your music, not the world around you.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔋</div>
+        <h3 class="feature-title">All-Day Battery</h3>
+        <p class="feature-desc">10 hours per bud + 30 hours in the charging case. Quick charge gives you 2 hours playback in just 15 minutes.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">💧</div>
+        <h3 class="feature-title">IPX5 Waterproof</h3>
+        <p class="feature-desc">Sweat and rain resistant. Take your sound to the gym, outdoors, and everywhere life takes you without hesitation.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Bluetooth 5.3</h3>
+        <p class="feature-desc">Ultra-stable connection up to 30 metres. Instant pairing with dual-device support — switch between phone and laptop effortlessly.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎙️</div>
+        <h3 class="feature-title">Crystal Clear Calls</h3>
+        <p class="feature-desc">6-mic ENC (Environmental Noise Cancellation) array ensures your voice comes through sharp and clear on every call.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} ── Product Deep-Dive ─────────────────────── {% endcomment %}
+<section class="section" style="background: var(--bg-card);">
+  <div class="container deep-grid">
+    {% assign images = product.images %}
+    {% if images.size > 1 %}
+      <img src="{{ images[1] | img_url: '600x' }}" alt="Product detail" class="deep-img reveal" loading="lazy">
+    {% else %}
+      <img src="{{ product.featured_image | img_url: '600x' }}" alt="{{ product.title | escape }}" class="deep-img reveal" loading="lazy">
+    {% endif %}
+
+    <div class="reveal">
+      <p class="section-label">Engineered Differently</p>
+      <h2 class="section-title">Built for Audiophiles,<br>Loved by Everyone</h2>
+      <p style="color: var(--text-muted); font-size: .97rem; margin-bottom: 8px;">
+        From commuters to creators — our earbuds adapt to your world with intelligent features that actually matter.
+      </p>
+      <ul class="check-list">
+        <li class="check-item">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Transparency mode lets ambient sound in at a touch</span>
+        </li>
+        <li class="check-item">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Customisable EQ presets via the companion app</span>
+        </li>
+        <li class="check-item">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Auto-pause when you remove a bud</span>
+        </li>
+        <li class="check-item">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Touch controls for music, calls and ANC</span>
+        </li>
+        <li class="check-item">
+          <span class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>Ergonomic wing-tip design for a secure, comfortable fit</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% comment %} ── Specs ─────────────────────────────────── {% endcomment %}
+<section class="section specs-section" id="specs">
+  <div class="container">
+    <div class="reveal" style="text-align: center; max-width: 600px; margin: 0 auto;">
+      <p class="section-label">Technical Specifications</p>
+      <h2 class="section-title">Every Detail Matters</h2>
+    </div>
+    <div class="specs-grid reveal">
+      <div class="spec-row">
+        <span class="spec-key">Driver Size</span>
+        <span class="spec-val">12mm Dynamic Driver</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Frequency Response</span>
+        <span class="spec-val">20 Hz – 20,000 Hz</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Bluetooth Version</span>
+        <span class="spec-val">5.3 (aptX HD, AAC)</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Wireless Range</span>
+        <span class="spec-val">Up to 30 metres</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Battery — Earbuds</span>
+        <span class="spec-val">10 Hours (ANC on: 8H)</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Battery — Case</span>
+        <span class="spec-val">30 Hours Additional</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Charge Time</span>
+        <span class="spec-val">90 min (15 min Quick Charge)</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Water Resistance</span>
+        <span class="spec-val">IPX5</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">ANC Depth</span>
+        <span class="spec-val">-40dB</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Microphones</span>
+        <span class="spec-val">6-Mic ENC Array</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Weight</span>
+        <span class="spec-val">5.3g per bud / 45g case</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">In the Box</span>
+        <span class="spec-val">Buds + Case + 3 Ear Tips + USB-C</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} ── Reviews ──────────────────────────────── {% endcomment %}
+<section class="section" id="reviews">
+  <div class="container">
+    <div class="reveal" style="text-align: center; max-width: 600px; margin: 0 auto 0;">
+      <p class="section-label">Customer Reviews</p>
+      <h2 class="section-title">2,400+ Happy Ears</h2>
+      <p class="section-sub" style="margin: 0 auto;">Real customers. Real sound. Real love.</p>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Best earbuds I've ever owned. The ANC is absolutely incredible — I was on a flight and I couldn't hear a single thing. Sound quality is stunning."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">AK</div>
+          <div>
+            <div class="reviewer-name">Arjun K.</div>
+            <div class="reviewer-meta">Mumbai, India</div>
+            <div class="verified-badge">✓ Verified Purchase</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"I use these for gym, calls, and late-night music sessions. Battery life is insane — I charge them once a week. The fit is so comfortable I forget they're in."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">PR</div>
+          <div>
+            <div class="reviewer-name">Priya R.</div>
+            <div class="reviewer-meta">Bangalore, India</div>
+            <div class="verified-badge">✓ Verified Purchase</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Unreal value. I compared these to earbuds 4x the price and these blew them out of the water for bass and detail. Customer service was also super helpful."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">SM</div>
+          <div>
+            <div class="reviewer-name">Siddharth M.</div>
+            <div class="reviewer-meta">Delhi, India</div>
+            <div class="verified-badge">✓ Verified Purchase</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} ── Trust Badges ─────────────────────────── {% endcomment %}
+<div class="trust-section">
+  <div class="container">
+    <div class="trust-badges">
+      <div class="trust-badge reveal">
+        <div class="trust-badge-icon">🚚</div>
+        <div class="trust-badge-text">
+          <strong>Free Shipping</strong>
+          <span>On all orders</span>
+        </div>
+      </div>
+      <div class="trust-badge reveal">
+        <div class="trust-badge-icon">🔒</div>
+        <div class="trust-badge-text">
+          <strong>Secure Payment</strong>
+          <span>256-bit SSL encrypted</span>
+        </div>
+      </div>
+      <div class="trust-badge reveal">
+        <div class="trust-badge-icon">🛡️</div>
+        <div class="trust-badge-text">
+          <strong>2-Year Warranty</strong>
+          <span>Full manufacturer cover</span>
+        </div>
+      </div>
+      <div class="trust-badge reveal">
+        <div class="trust-badge-icon">↩️</div>
+        <div class="trust-badge-text">
+          <strong>30-Day Returns</strong>
+          <span>No questions asked</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %} ── FAQ ──────────────────────────────────── {% endcomment %}
+<section class="section" id="faq">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">FAQ</p>
+      <h2 class="section-title">Got Questions?</h2>
+    </div>
+    <ul class="faq-list" id="faqList">
+      <li class="faq-item reveal">
+        <button class="faq-q">
+          Are these compatible with both iPhone and Android?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Yes! These earbuds use Bluetooth 5.3 and pair instantly with any iOS or Android device. The companion app is available on both the App Store and Google Play for full EQ customisation.</div>
+      </li>
+      <li class="faq-item reveal">
+        <button class="faq-q">
+          How do I activate Active Noise Cancelling?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Simply double-tap the left earbud to cycle between ANC on, Transparency mode, and Normal mode. You can also customise the touch controls in the companion app.</div>
+      </li>
+      <li class="faq-item reveal">
+        <button class="faq-q">
+          How long does shipping take?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Standard shipping takes 3–5 business days within India. Express shipping (1–2 business days) is available at checkout. International orders typically arrive within 7–14 business days.</div>
+      </li>
+      <li class="faq-item reveal">
+        <button class="faq-q">
+          Are the earbuds waterproof enough for swimming?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">The earbuds carry an IPX5 rating, meaning they are sweat and splash resistant. They can handle rain and intense workouts with ease, but we do not recommend submerging them in water or using them while swimming.</div>
+      </li>
+      <li class="faq-item reveal">
+        <button class="faq-q">
+          What's in the box?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Inside the box you'll find: the earbuds, the charging case, 3 pairs of ear tips (S/M/L), a USB-C charging cable, and a quick-start guide. Everything you need — nothing you don't.</div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+{% comment %} ── Final CTA Banner ──────────────────────── {% endcomment %}
+<section class="cta-banner">
+  <div class="container">
+    <p class="section-label" style="text-align:center;">Limited Stock</p>
+    <h2 class="cta-title reveal">Ready to Upgrade Your Sound?</h2>
+    <p class="cta-sub reveal">Join over 50,000 customers who upgraded to premium audio. Free shipping. 30-day returns. No risk.</p>
+    <div class="cta-price-row reveal">
+      <span class="price-current">{{ product.price | money }}</span>
+      {% if product.compare_at_price > product.price %}
+        <span class="price-compare">{{ product.compare_at_price | money }}</span>
+        <span class="price-save">LIMITED OFFER</span>
+      {% endif %}
+    </div>
+    <form method="post" action="/cart/add" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;" class="reveal">
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+      <button type="submit" class="btn-primary" style="font-size:1.1rem; padding: 20px 52px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Order Now — Free Shipping
+      </button>
+    </form>
+  </div>
+</section>
+
+{% comment %} ── Footer ───────────────────────────────── {% endcomment %}
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-logo">SONO<span>X</span></div>
+    <ul class="footer-links">
+      <li><a href="/pages/about">About</a></li>
+      <li><a href="/pages/shipping">Shipping</a></li>
+      <li><a href="/pages/returns">Returns</a></li>
+      <li><a href="/pages/warranty">Warranty</a></li>
+      <li><a href="/pages/privacy-policy">Privacy</a></li>
+      <li><a href="/pages/contact">Contact</a></li>
+    </ul>
+    <p class="footer-copy">© {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
+  </div>
+</footer>
+
+{% comment %} ── WhatsApp Floating Button ──────────────── {% endcomment %}
+<a class="wa-btn" href="https://wa.me/{{ shop.phone | remove: '+' | remove: ' ' | remove: '-' }}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<script>
+  // ── Nav scroll effect ──────────────────────────────
+  (function() {
+    const nav = document.getElementById('siteNav');
+    function onScroll() {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+
+  // ── Scroll reveal ──────────────────────────────────
+  (function() {
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    const io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+
+  // ── FAQ accordion ──────────────────────────────────
+  (function() {
+    document.querySelectorAll('.faq-q').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = btn.closest('.faq-item');
+        var isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(function(o) {
+          o.classList.remove('open');
+        });
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  })();
+
+  // ── Add to cart feedback ───────────────────────────
+  (function() {
+    document.querySelectorAll('form[action="/cart/add"]').forEach(function(form) {
+      form.addEventListener('submit', function(e) {
+        var btn = form.querySelector('button[type="submit"]');
+        if (!btn) return;
+        var original = btn.innerHTML;
+        btn.innerHTML = '✓ Added to Cart!';
+        btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+        btn.disabled = true;
+        setTimeout(function() {
+          btn.innerHTML = original;
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 2200);
+      });
+    });
+  })();
+
+  // ── Animated stat counters ─────────────────────────
+  (function() {
+    var targets = {
+      '40H': { val: 40, suffix: 'H' },
+      '-40dB': { val: 40, prefix: '-', suffix: 'dB' },
+      '30m': { val: 30, suffix: 'm' },
+      '2,400+': { val: 2400, suffix: '+', comma: true }
+    };
+    document.querySelectorAll('.stat-num').forEach(function(el) {
+      var text = el.textContent.trim();
+      var data = targets[text];
+      if (!data) return;
+      var start = null;
+      var duration = 1600;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          observer.unobserve(el);
+          function step(ts) {
+            if (!start) start = ts;
+            var progress = Math.min((ts - start) / duration, 1);
+            var ease = 1 - Math.pow(1 - progress, 3);
+            var val = Math.round(data.val * ease);
+            var display = (data.prefix || '') + (data.comma ? val.toLocaleString() : val) + (data.suffix || '');
+            el.textContent = display;
+            if (progress < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.5 });
+      observer.observe(el);
+    });
+  })();
+</script>
